@@ -1,0 +1,14 @@
+<Project>
+  
+  <ItemGroup>
+    <Reference Include="Holism.Accounts.Api">
+      <HintPath>/HolismDotNet/Accounts/Packages/Holism.Accounts.Models.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Holism.Accounts.Api">
+      <HintPath>/HolismDotNet/Accounts/Packages/Holism.Accounts.DataAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+
+</Project>
