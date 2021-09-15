@@ -1,5 +1,0 @@
-https://www.redotheweb.com/2015/11/09/api-security.html
-
-Use both cookie && token for security.
-
-Also, maybe ASP.NET Core Identity does it.
