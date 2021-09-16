@@ -5,6 +5,10 @@
             "name": "Users",
             "columns": [
                 {
+                    "name": "KeycloakGuid",
+                    "isUnique": true
+                },
+                {
                     "name": "FirstName"
                 },
                 {
