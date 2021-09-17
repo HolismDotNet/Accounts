@@ -24,7 +24,7 @@ namespace Holism.Accounts
 
         public User GetUserByKeycloakGuid(Guid keycloakGuid)
         {
-            var user = Get(i => i.KeycloakGuid == keycloakGuid);
+            var user = ReadRepository.Get(i => i.KeycloakGuid == keycloakGuid);
             if (user == null)
             {
                 user =
@@ -36,15 +36,23 @@ namespace Holism.Accounts
             return user;
         }
 
-        public void SyncUser(Guid keycloakGuid)
+        public static void SyncUser(Guid keycloakGuid)
         {
-            var user = GetUserByKeycloakGuid(keycloakGuid);
-            if (syncs.ContainsKey(user.KeycloakGuid) && DateTime.Now.Subtract(syncs[user.KeycloakGuid]).TotalHours < 12)
+            if (syncs.ContainsKey(keycloakGuid) && DateTime.Now.Subtract(syncs[keycloakGuid]).TotalHours < 12)
             {
                 return;
             }
+            var user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
             if (user.LastSyncDate != null && DateTime.Now.Subtract(user.LastSyncDate.Value).TotalHours < 12)
             {
+                if (syncs.ContainsKey(keycloakGuid))
+                {
+                    syncs[keycloakGuid] = user.LastSyncDate.Value;
+                }
+                else 
+                {
+                    syncs.Add(keycloakGuid, user.LastSyncDate.Value);
+                }
                 return;
             }
             var parameters = new Dictionary<string, string>();
@@ -91,7 +99,7 @@ namespace Holism.Accounts
                 user.IsEmailVerified = emailVerified.GetBoolean();
             }
             user.LastSyncDate = DateTime.Now;
-            Update(user);
+            new UserBusiness().Update(user);
             if (syncs.ContainsKey(user.KeycloakGuid))
             {
                 syncs[user.KeycloakGuid] = DateTime.Now;
