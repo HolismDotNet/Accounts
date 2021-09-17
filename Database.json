@@ -9,13 +9,28 @@
                     "isUnique": true
                 },
                 {
-                    "name": "FirstName"
+                    "name": "Email",
+                    "isNullable": true
                 },
                 {
-                    "name": "LastName"
+                    "name": "IsEmailVerified",
+                    "type": "boolean",
+                    "isNullable": true
+                },
+                {
+                    "name": "FirstName",
+                    "isNullable": true
+                },
+                {
+                    "name": "LastName",
+                    "isNullable": true
                 },
                 {
                     "name": "ProfilePictureGuid",
+                    "isNullable": true
+                },
+                {
+                    "name": "LastSyncDate",
                     "isNullable": true
                 }
             ]
