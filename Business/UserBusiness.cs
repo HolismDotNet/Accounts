@@ -33,12 +33,12 @@ namespace Holism.Accounts
                     };
                 Create (user);
             }
-            SyncUser(user);
             return user;
         }
 
-        private void SyncUser(User user)
+        public void SyncUser(Guid keycloakGuid)
         {
+            var user = GetUserByKeycloakGuid(keycloakGuid);
             if (syncs.ContainsKey(user.KeycloakGuid) && DateTime.Now.Subtract(syncs[user.KeycloakGuid]).TotalHours < 12)
             {
                 return;
