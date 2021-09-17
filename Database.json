@@ -35,5 +35,33 @@
                 }
             ]
         }
+    ],
+    "views": [
+        {
+            "name": "UserViews",
+            "query": [
+                "select",
+                "    Id,",
+                "    KeycloakGuid as [Guid],",
+                "    Email,",
+                "    IsEmailVerified,",
+                "    FirstName,",
+                "    LastName,",
+                "    (",
+                "        case",
+                "        when FirstName is not null",
+                "        or LastName is not null",
+                "        then",
+                "            isnull(FirstName, '') + ' ' + isnull(LastName, '')",
+                "        when Email is not null",
+                "        then Email",
+                "        else",
+                "            'N/A'",
+                "        end",
+                "    ) as DisplayValue,",
+                "    LastSyncDate",
+                "from Users"
+            ]
+        }
     ]
 }

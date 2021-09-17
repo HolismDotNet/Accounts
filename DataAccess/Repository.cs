@@ -13,5 +13,14 @@ namespace Holism.Accounts.DataAccess
                 >(new AccountsContext());
             }
         }
+
+        public static Repository<UserView> UserView
+        {
+            get
+            {
+                return new Holism.DataAccess.Repository<UserView
+                >(new AccountsContext());
+            }
+        }
     }
 }
