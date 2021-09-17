@@ -1,8 +1,16 @@
 <Project>
   
   <ItemGroup>
-    <Reference Include="Holism.Accounts.Api">
-      <HintPath>/HolismDotNet/Accounts/Packages/Holism.Accounts.Api.dll</HintPath>
+    <Reference Include="Holism.Accounts.Models">
+      <HintPath>/HolismDotNet/Accounts/Packages/Holism.Accounts.Models.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Holism.Accounts.DataAccess">
+      <HintPath>/HolismDotNet/Accounts/Packages/Holism.Accounts.DataAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Holism.Accounts.Business">
+      <HintPath>/HolismDotNet/Accounts/Packages/Holism.Accounts.Business.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
