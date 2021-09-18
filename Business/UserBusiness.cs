@@ -38,20 +38,26 @@ namespace Holism.Accounts
 
         public static void SyncUser(Guid keycloakGuid)
         {
-            if (syncs.ContainsKey(keycloakGuid) && DateTime.Now.Subtract(syncs[keycloakGuid]).TotalHours < 12)
+            lock(lockToken)
             {
-                return;
+                if (syncs.ContainsKey(keycloakGuid) && DateTime.Now.Subtract(syncs[keycloakGuid]).TotalHours < 12)
+                {
+                    return;
+                }
             }
             var user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
             if (user.LastSyncDate != null && DateTime.Now.Subtract(user.LastSyncDate.Value).TotalHours < 12)
             {
-                if (syncs.ContainsKey(keycloakGuid))
+                lock(lockToken)
                 {
-                    syncs[keycloakGuid] = user.LastSyncDate.Value;
-                }
-                else 
-                {
-                    syncs.Add(keycloakGuid, user.LastSyncDate.Value);
+                    if (syncs.ContainsKey(keycloakGuid))
+                    {
+                        syncs[keycloakGuid] = user.LastSyncDate.Value;
+                    }
+                    else 
+                    {
+                        syncs.Add(keycloakGuid, user.LastSyncDate.Value);
+                    }
                 }
                 return;
             }
@@ -100,13 +106,16 @@ namespace Holism.Accounts
             }
             user.LastSyncDate = DateTime.Now;
             new UserBusiness().Update(user);
-            if (syncs.ContainsKey(user.KeycloakGuid))
+            lock(lockToken)
             {
-                syncs[user.KeycloakGuid] = DateTime.Now;
-            }
-            else 
-            {
-                syncs.Add(user.KeycloakGuid, DateTime.Now);
+                if (syncs.ContainsKey(user.KeycloakGuid))
+                {
+                    syncs[user.KeycloakGuid] = DateTime.Now;
+                }
+                else 
+                {
+                    syncs.Add(user.KeycloakGuid, DateTime.Now);
+                }
             }
         }
     }
