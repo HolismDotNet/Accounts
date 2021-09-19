@@ -28,17 +28,18 @@ namespace Holism.Accounts.Business
             if (user == null)
             {
                 user =
-                    new User {
+                    new User
+                    {
                         KeycloakGuid = keycloakGuid
                     };
-                Create (user);
+                Create(user);
             }
             return user;
         }
 
         public static void SyncUser(Guid keycloakGuid)
         {
-            lock(lockToken)
+            lock (lockToken)
             {
                 if (syncs.ContainsKey(keycloakGuid) && DateTime.Now.Subtract(syncs[keycloakGuid]).TotalHours < 12)
                 {
@@ -48,13 +49,13 @@ namespace Holism.Accounts.Business
             var user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
             if (user.LastSyncDate != null && DateTime.Now.Subtract(user.LastSyncDate.Value).TotalHours < 12)
             {
-                lock(lockToken)
+                lock (lockToken)
                 {
                     if (syncs.ContainsKey(keycloakGuid))
                     {
                         syncs[keycloakGuid] = user.LastSyncDate.Value;
                     }
-                    else 
+                    else
                     {
                         syncs.Add(keycloakGuid, user.LastSyncDate.Value);
                     }
@@ -78,7 +79,7 @@ namespace Holism.Accounts.Business
             }
             var json = response.Content.ReadAsStringAsync().Result.Deserialize();
             var token = json.GetProperty("access_token").GetString();
-            
+
 
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
@@ -96,7 +97,7 @@ namespace Holism.Accounts.Business
             {
                 user.LastName = lastName.GetString();
             }
-            if (json.TryGetProperty("email", out var email)) 
+            if (json.TryGetProperty("email", out var email))
             {
                 user.Email = email.GetString();
             }
@@ -106,20 +107,20 @@ namespace Holism.Accounts.Business
             }
             user.LastSyncDate = DateTime.Now;
             new UserBusiness().Update(user);
-            lock(lockToken)
+            lock (lockToken)
             {
                 if (syncs.ContainsKey(user.KeycloakGuid))
                 {
                     syncs[user.KeycloakGuid] = DateTime.Now;
                 }
-                else 
+                else
                 {
                     syncs.Add(user.KeycloakGuid, DateTime.Now);
                 }
             }
         }
 
-        
+
 
         public void Users()
         {
@@ -140,49 +141,49 @@ namespace Holism.Accounts.Business
             }
             var json = response.Content.ReadAsStringAsync().Result.Deserialize();
             var token = json.GetProperty("access_token").GetString();
-            
+
 
 
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
             response = client.GetAsync(@$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/admin/realms/{Config.GetSetting("Realm")}/users").Result;
-            
+
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 throw new ServerException(@$"Keycloak error {response.StatusCode}");
             }
-            var usersKeycloak = response.Content.ReadAsStringAsync().Result.Deserialize();
-            // foreach (var userItem in usersKeycloak)
-            // {
-            //     var user = new User ();
-            //     if (userItem.TryGetProperty("keycloakGuid", out var keycloakGuid))
-            //     {
-            //         var keycloakGuid = keycloakGuid.GetString();
-            //         user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
-            //     }
-            //     else
-            //     {
-            //         continue;
-            //     }                
-            //     if (userItem.TryGetProperty("firstName", out var firstName))
-            //     {
-            //         user.FirstName = firstName.GetString();
-            //     }
-            //     if (userItem.TryGetProperty("lastName", out var lastName))
-            //     {
-            //         user.LastName = lastName.GetString();
-            //     }
-            //     if (userItem.TryGetProperty("email", out var email)) 
-            //     {
-            //         user.Email = email.GetString();
-            //     }
-            //     if (userItem.TryGetProperty("emailVerified", out var emailVerified))
-            //     {
-            //         user.IsEmailVerified = emailVerified.GetBoolean();
-            //     }
-            //     user.LastSyncDate = DateTime.Now;
-            //     new UserBusiness().Update(user);                                
-            // }
+            var usersKeycloak = response.Content.ReadAsStringAsync().Result.Deserialize().EnumerateArray();
+            foreach (var userItem in usersKeycloak)
+            {
+                var user = new User();
+                // if (userItem.TryGetProperty("keycloakGuid", out var keycloakGuid))
+                // {
+                //     var keycloakGuid = keycloakGuid.GetString();
+                //     user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
+                // }
+                // else
+                // {
+                //     continue;
+                // }
+                // if (userItem.TryGetProperty("firstName", out var firstName))
+                // {
+                //     user.FirstName = firstName.GetString();
+                // }
+                // if (userItem.TryGetProperty("lastName", out var lastName))
+                // {
+                //     user.LastName = lastName.GetString();
+                // }
+                // if (userItem.TryGetProperty("email", out var email))
+                // {
+                //     user.Email = email.GetString();
+                // }
+                // if (userItem.TryGetProperty("emailVerified", out var emailVerified))
+                // {
+                //     user.IsEmailVerified = emailVerified.GetBoolean();
+                // }
+                user.LastSyncDate = DateTime.Now;
+                new UserBusiness().Update(user);
+            }
         }
     }
 }
