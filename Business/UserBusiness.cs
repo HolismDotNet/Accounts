@@ -156,31 +156,31 @@ namespace Holism.Accounts.Business
             foreach (var userItem in usersKeycloak)
             {
                 var user = new User();
-                // if (userItem.TryGetProperty("keycloakGuid", out var keycloakGuid))
-                // {
-                //     var keycloakGuid = keycloakGuid.GetString();
-                //     user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
-                // }
-                // else
-                // {
-                //     continue;
-                // }
-                // if (userItem.TryGetProperty("firstName", out var firstName))
-                // {
-                //     user.FirstName = firstName.GetString();
-                // }
-                // if (userItem.TryGetProperty("lastName", out var lastName))
-                // {
-                //     user.LastName = lastName.GetString();
-                // }
-                // if (userItem.TryGetProperty("email", out var email))
-                // {
-                //     user.Email = email.GetString();
-                // }
-                // if (userItem.TryGetProperty("emailVerified", out var emailVerified))
-                // {
-                //     user.IsEmailVerified = emailVerified.GetBoolean();
-                // }
+                if (userItem.TryGetProperty("keycloakGuid", out var keycloakGuid))
+                {
+                    var keycloakGuid = keycloakGuid.GetString();
+                    user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
+                }
+                else
+                {
+                    continue;
+                }
+                if (userItem.TryGetProperty("firstName", out var firstName))
+                {
+                    user.FirstName = firstName.GetString();
+                }
+                if (userItem.TryGetProperty("lastName", out var lastName))
+                {
+                    user.LastName = lastName.GetString();
+                }
+                if (userItem.TryGetProperty("email", out var email))
+                {
+                    user.Email = email.GetString();
+                }
+                if (userItem.TryGetProperty("emailVerified", out var emailVerified))
+                {
+                    user.IsEmailVerified = emailVerified.GetBoolean();
+                }
                 user.LastSyncDate = DateTime.Now;
                 new UserBusiness().Update(user);
             }
