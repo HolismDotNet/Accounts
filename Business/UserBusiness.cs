@@ -22,6 +22,43 @@ namespace Holism.Accounts.Business
 
         private static Dictionary<Guid, DateTime> syncs = new Dictionary<Guid, DateTime>();
 
+        public string GetKeycloakToken()
+        {
+
+            var parameters = new Dictionary<string, string>();
+            parameters.Add("client_id", "admin-cli");
+            parameters.Add("username", Config.GetSetting("KeycloakAdminUser"));
+            parameters.Add("password", Config.GetSetting("KeycloakAdminPassword"));
+            parameters.Add("grant_type", "password");
+            var client = new HttpClient();
+            var req =
+                new HttpRequestMessage(HttpMethod.Post,
+                    @$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/realms/master/protocol/openid-connect/token")
+                { Content = new FormUrlEncodedContent(parameters) };
+            var response = client.SendAsync(req).Result;
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ServerException(@$"Keycloak error {response.StatusCode}");
+            }
+            var json = response.Content.ReadAsStringAsync().Result.Deserialize();
+            return json.GetProperty("access_token").GetString();
+            
+        }
+
+        public System.Net.Http.HttpResponseMessage CallKeycloak(string url)
+        {
+            var token = GetKeycloakToken();
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+            var response = client.GetAsync(@$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/admin/realms/{Config.GetSetting("Realm")}/{url}").Result;
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ServerException(@$"Keycloak error {response.StatusCode}");
+            }
+            return response;
+        }
+
         public User GetUserByKeycloakGuid(Guid keycloakGuid)
         {
             var user = ReadRepository.Get(i => i.KeycloakGuid == keycloakGuid);
@@ -62,33 +99,12 @@ namespace Holism.Accounts.Business
                 }
                 return;
             }
-            var parameters = new Dictionary<string, string>();
-            parameters.Add("client_id", "admin-cli");
-            parameters.Add("username", Config.GetSetting("KeycloakAdminUser"));
-            parameters.Add("password", Config.GetSetting("KeycloakAdminPassword"));
-            parameters.Add("grant_type", "password");
-            var client = new HttpClient();
-            var req =
-                new HttpRequestMessage(HttpMethod.Post,
-                    @$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/realms/master/protocol/openid-connect/token")
-                { Content = new FormUrlEncodedContent(parameters) };
-            var response = client.SendAsync(req).Result;
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new ServerException(@$"Keycloak error {response.StatusCode}");
-            }
+
+
+            var response = CallKeycloak($"/users/{user.KeycloakGuid}");
             var json = response.Content.ReadAsStringAsync().Result.Deserialize();
             var token = json.GetProperty("access_token").GetString();
-
-
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            response = client.GetAsync(@$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/admin/realms/{Config.GetSetting("Realm")}/users/{user.KeycloakGuid}").Result;
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new ServerException(@$"Keycloak error {response.StatusCode}");
-            }
-            json = response.Content.ReadAsStringAsync().Result.Deserialize();
+            
             if (json.TryGetProperty("firstName", out var firstName))
             {
                 user.FirstName = firstName.GetString();
@@ -122,35 +138,9 @@ namespace Holism.Accounts.Business
 
         public void SyncUsers()
         {
-            var parameters = new Dictionary<string, string>();
-            parameters.Add("client_id", "admin-cli");
-            parameters.Add("username", Config.GetSetting("KeycloakAdminUser"));
-            parameters.Add("password", Config.GetSetting("KeycloakAdminPassword"));
-            parameters.Add("grant_type", "password");
-            var client = new HttpClient();
-            var req =
-                new HttpRequestMessage(HttpMethod.Post,
-                    @$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/realms/master/protocol/openid-connect/token")
-                { Content = new FormUrlEncodedContent(parameters) };
-            var response = client.SendAsync(req).Result;
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new ServerException(@$"Keycloak error {response.StatusCode}");
-            }
-            var json = response.Content.ReadAsStringAsync().Result.Deserialize();
-            var token = json.GetProperty("access_token").GetString();
+            var response = CallKeycloak($"/users");
+            var usersKeycloak = response.Content.ReadAsStringAsync().Result.Deserialize();
 
-
-
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            response = client.GetAsync(@$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/admin/realms/{Config.GetSetting("Realm")}/users").Result;
-
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                throw new ServerException(@$"Keycloak error {response.StatusCode}");
-            }
-            var usersKeycloak = response.Content.ReadAsStringAsync().Result.Deserialize().EnumerateArray();
             foreach (var userItem in usersKeycloak)
             {
                 var user = new User();
@@ -184,5 +174,6 @@ namespace Holism.Accounts.Business
                 new UserBusiness().Update(user);
             }
         }
+
     }
 }
