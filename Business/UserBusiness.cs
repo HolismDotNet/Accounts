@@ -120,9 +120,7 @@ namespace Holism.Accounts.Business
             }
         }
 
-
-
-        public void Users()
+        public void SyncUsers()
         {
             var parameters = new Dictionary<string, string>();
             parameters.Add("client_id", "admin-cli");
@@ -156,10 +154,10 @@ namespace Holism.Accounts.Business
             foreach (var userItem in usersKeycloak)
             {
                 var user = new User();
-                if (userItem.TryGetProperty("keycloakGuid", out var keycloakGuid))
+                if (userItem.TryGetProperty("id", out var keycloakGuid))
                 {
-                    var keycloakGuid = keycloakGuid.GetString();
-                    user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
+                    var userGuid = keycloakGuid.GetGuid();
+                    user = new UserBusiness().GetUserByKeycloakGuid(userGuid);
                 }
                 else
                 {
@@ -182,6 +180,7 @@ namespace Holism.Accounts.Business
                     user.IsEmailVerified = emailVerified.GetBoolean();
                 }
                 user.LastSyncDate = DateTime.Now;
+
                 new UserBusiness().Update(user);
             }
         }
