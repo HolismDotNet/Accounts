@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net;
 
-namespace Holism.Accounts
+namespace Holism.Accounts.Business
 {
     public class UserBusiness : Business<User, User>
     {
@@ -117,6 +117,65 @@ namespace Holism.Accounts
                     syncs.Add(user.KeycloakGuid, DateTime.Now);
                 }
             }
+        }
+
+        
+
+        public static void Users(Guid keycloakGuid)
+        {
+            var client = new HttpClient();
+            var req =
+                new HttpRequestMessage(HttpMethod.Post,
+                    @$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/realms/master/protocol/openid-connect/token");
+            var response = client.SendAsync(req).Result;
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ServerException(@$"Keycloak error {response.StatusCode}");
+            }
+            var result = response.Content.ReadAsStringAsync().Result.Deserialize();
+            var token = result.GetProperty("access_token").GetString();
+            
+
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+            response = client.GetAsync(@$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/admin/realms/{Config.GetSetting("Realm")}/users").Result;
+            
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new ServerException(@$"Keycloak error {response.StatusCode}");
+            }
+            var usersKeycloak = response.Content.ReadAsStringAsync().Result.Deserialize();
+            // foreach (var userItem in usersKeycloak)
+            // {
+            //     var user = new User ();
+            //     if (userItem.TryGetProperty("keycloakGuid", out var keycloakGuid))
+            //     {
+            //         var keycloakGuid = keycloakGuid.GetString();
+            //         user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
+            //     }
+            //     else
+            //     {
+            //         continue;
+            //     }                
+            //     if (userItem.TryGetProperty("firstName", out var firstName))
+            //     {
+            //         user.FirstName = firstName.GetString();
+            //     }
+            //     if (userItem.TryGetProperty("lastName", out var lastName))
+            //     {
+            //         user.LastName = lastName.GetString();
+            //     }
+            //     if (userItem.TryGetProperty("email", out var email)) 
+            //     {
+            //         user.Email = email.GetString();
+            //     }
+            //     if (userItem.TryGetProperty("emailVerified", out var emailVerified))
+            //     {
+            //         user.IsEmailVerified = emailVerified.GetBoolean();
+            //     }
+            //     user.LastSyncDate = DateTime.Now;
+            //     new UserBusiness().Update(user);                                
+            // }
         }
     }
 }
