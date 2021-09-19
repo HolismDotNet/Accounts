@@ -121,20 +121,27 @@ namespace Holism.Accounts.Business
 
         
 
-        public static void Users(Guid keycloakGuid)
+        public void Users()
         {
+            var parameters = new Dictionary<string, string>();
+            parameters.Add("client_id", "admin-cli");
+            parameters.Add("username", Config.GetSetting("KeycloakAdminUser"));
+            parameters.Add("password", Config.GetSetting("KeycloakAdminPassword"));
+            parameters.Add("grant_type", "password");
             var client = new HttpClient();
             var req =
                 new HttpRequestMessage(HttpMethod.Post,
-                    @$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/realms/master/protocol/openid-connect/token");
+                    @$"{Config.GetSetting("KeycloakUrl").Trim('/')}/auth/realms/master/protocol/openid-connect/token")
+                { Content = new FormUrlEncodedContent(parameters) };
             var response = client.SendAsync(req).Result;
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 throw new ServerException(@$"Keycloak error {response.StatusCode}");
             }
-            var result = response.Content.ReadAsStringAsync().Result.Deserialize();
-            var token = result.GetProperty("access_token").GetString();
+            var json = response.Content.ReadAsStringAsync().Result.Deserialize();
+            var token = json.GetProperty("access_token").GetString();
             
+
 
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
