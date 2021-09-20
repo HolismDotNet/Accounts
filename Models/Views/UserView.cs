@@ -11,6 +11,8 @@ namespace Holism.Accounts.Models
 
         public long Id { get; set; }
 
+        public string Username { get; set; }
+
         public Guid Guid { get; set; }
 
         public string Email { get; set; }
@@ -21,7 +23,7 @@ namespace Holism.Accounts.Models
 
         public string LastName { get; set; }
 
-        public string DisplayValue { get; set; }
+        public string FullName { get; set; }
 
         public DateTime? LastSyncDate { get; set; }
 

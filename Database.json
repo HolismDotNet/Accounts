@@ -46,6 +46,7 @@
             "query": [
                 "select",
                 "    Id,",
+                "    Username,",
                 "    KeycloakGuid as [Guid],",
                 "    Email,",
                 "    IsEmailVerified,",
@@ -62,7 +63,7 @@
                 "        else",
                 "            'N/A'",
                 "        end",
-                "    ) as DisplayValue,",
+                "    ) as FullName,",
                 "    LastSyncDate",
                 "from Users"
             ]
