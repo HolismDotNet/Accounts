@@ -22,7 +22,7 @@ namespace Holism.Accounts.Business
 
         private static Dictionary<Guid, DateTime> syncs = new Dictionary<Guid, DateTime>();
 
-        private  static string GetKeycloakToken()
+        private static string GetKeycloakToken()
         {
 
             var parameters = new Dictionary<string, string>();
@@ -42,7 +42,7 @@ namespace Holism.Accounts.Business
             }
             var json = response.Content.ReadAsStringAsync().Result.Deserialize();
             return json.GetProperty("access_token").GetString();
-            
+
         }
 
         private static System.Text.Json.JsonElement CallKeycloak(string url)
@@ -104,7 +104,7 @@ namespace Holism.Accounts.Business
             var response = CallKeycloak($"users/{user.KeycloakGuid}");
             var json = response;
             var token = json.GetProperty("access_token").GetString();
-            
+
             if (json.TryGetProperty("firstName", out var firstName))
             {
                 user.FirstName = firstName.GetString();
@@ -112,6 +112,11 @@ namespace Holism.Accounts.Business
             if (json.TryGetProperty("lastName", out var lastName))
             {
                 user.LastName = lastName.GetString();
+            }
+
+            if (json.TryGetProperty("email", out var username))
+            {
+                user.Username = username.GetString();
             }
             if (json.TryGetProperty("email", out var email))
             {
@@ -160,6 +165,10 @@ namespace Holism.Accounts.Business
                 if (userItem.TryGetProperty("lastName", out var lastName))
                 {
                     user.LastName = lastName.GetString();
+                }
+                if (userItem.TryGetProperty("email", out var username))
+                {
+                    user.Username = username.GetString();
                 }
                 if (userItem.TryGetProperty("email", out var email))
                 {

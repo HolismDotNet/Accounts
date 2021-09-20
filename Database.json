@@ -9,6 +9,10 @@
                     "isUnique": true
                 },
                 {
+                    "name": "Username",
+                    "isNullable": true
+                },
+                {
                     "name": "Email",
                     "isNullable": true
                 },
