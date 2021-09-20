@@ -63,7 +63,7 @@
                 "        else",
                 "            'N/A'",
                 "        end",
-                "    ) as FullName,",
+                "    ) as DispalyName,",
                 "    LastSyncDate",
                 "from Users"
             ]
