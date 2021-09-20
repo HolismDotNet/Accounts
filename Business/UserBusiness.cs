@@ -103,7 +103,6 @@ namespace Holism.Accounts.Business
 
             var response = CallKeycloak($"users/{user.KeycloakGuid}");
             var json = response;
-            var token = json.GetProperty("access_token").GetString();
 
             if (json.TryGetProperty("firstName", out var firstName))
             {
