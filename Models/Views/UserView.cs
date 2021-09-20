@@ -23,7 +23,7 @@ namespace Holism.Accounts.Models
 
         public string LastName { get; set; }
 
-        public string FullName { get; set; }
+        public string DisplayName { get; set; }
 
         public DateTime? LastSyncDate { get; set; }
 
