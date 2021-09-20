@@ -22,7 +22,7 @@ namespace Holism.Accounts.Business
 
         private static Dictionary<Guid, DateTime> syncs = new Dictionary<Guid, DateTime>();
 
-        public string GetKeycloakToken()
+        private  static string GetKeycloakToken()
         {
 
             var parameters = new Dictionary<string, string>();
@@ -45,7 +45,7 @@ namespace Holism.Accounts.Business
             
         }
 
-        public System.Net.Http.HttpResponseMessage CallKeycloak(string url)
+        private static System.Net.Http.HttpResponseMessage CallKeycloak(string url)
         {
             var token = GetKeycloakToken();
             var client = new HttpClient();
@@ -59,7 +59,7 @@ namespace Holism.Accounts.Business
             return response;
         }
 
-        public User GetUserByKeycloakGuid(Guid keycloakGuid)
+        private User GetUserByKeycloakGuid(Guid keycloakGuid)
         {
             var user = ReadRepository.Get(i => i.KeycloakGuid == keycloakGuid);
             if (user == null)
@@ -136,10 +136,10 @@ namespace Holism.Accounts.Business
             }
         }
 
-        public void SyncUsers()
+        public static void SyncUsers()
         {
             var response = CallKeycloak($"/users");
-            var usersKeycloak = response.Content.ReadAsStringAsync().Result.Deserialize();
+            var usersKeycloak = response.Content.ReadAsStringAsync().Result.Deserialize().EnumerateArray();
 
             foreach (var userItem in usersKeycloak)
             {
