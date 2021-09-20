@@ -16,8 +16,8 @@ namespace Holism.Accounts.Business
     public class UserBusiness : Business<User, User>
     {
         protected override Repository<User> WriteRepository => Repository.User;
-
         protected override ReadRepository<User> ReadRepository =>
+
             Repository.User;
 
         private static Dictionary<Guid, DateTime> syncs = new Dictionary<Guid, DateTime>();
@@ -45,7 +45,7 @@ namespace Holism.Accounts.Business
             
         }
 
-        private static System.Net.Http.HttpResponseMessage CallKeycloak(string url)
+        private static System.Text.Json.JsonElement CallKeycloak(string url)
         {
             var token = GetKeycloakToken();
             var client = new HttpClient();
@@ -56,7 +56,7 @@ namespace Holism.Accounts.Business
             {
                 throw new ServerException(@$"Keycloak error {response.StatusCode}");
             }
-            return response;
+            return response.Content.ReadAsStringAsync().Result.Deserialize();
         }
 
         private User GetUserByKeycloakGuid(Guid keycloakGuid)
@@ -101,8 +101,8 @@ namespace Holism.Accounts.Business
             }
 
 
-            var response = CallKeycloak($"/users/{user.KeycloakGuid}");
-            var json = response.Content.ReadAsStringAsync().Result.Deserialize();
+            var response = CallKeycloak($"users/{user.KeycloakGuid}");
+            var json = response;
             var token = json.GetProperty("access_token").GetString();
             
             if (json.TryGetProperty("firstName", out var firstName))
@@ -138,8 +138,8 @@ namespace Holism.Accounts.Business
 
         public static void SyncUsers()
         {
-            var response = CallKeycloak($"/users");
-            var usersKeycloak = response.Content.ReadAsStringAsync().Result.Deserialize().EnumerateArray();
+            var response = CallKeycloak($"users");
+            var usersKeycloak = response.EnumerateArray();
 
             foreach (var userItem in usersKeycloak)
             {
