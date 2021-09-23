@@ -11,7 +11,7 @@ namespace Holism.Accounts.Models
 
         public long Id { get; set; }
 
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         public Guid Guid { get; set; }
 

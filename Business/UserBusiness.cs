@@ -115,7 +115,7 @@ namespace Holism.Accounts.Business
 
             if (json.TryGetProperty("email", out var username))
             {
-                user.Username = username.GetString();
+                user.UserName = username.GetString();
             }
             if (json.TryGetProperty("email", out var email))
             {
@@ -167,7 +167,7 @@ namespace Holism.Accounts.Business
                 }
                 if (userItem.TryGetProperty("email", out var username))
                 {
-                    user.Username = username.GetString();
+                    user.UserName = username.GetString();
                 }
                 if (userItem.TryGetProperty("email", out var email))
                 {

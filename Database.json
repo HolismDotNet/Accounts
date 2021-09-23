@@ -9,7 +9,7 @@
                     "isUnique": true
                 },
                 {
-                    "name": "Username",
+                    "name": "UserName",
                     "isNullable": true
                 },
                 {
@@ -46,7 +46,7 @@
             "query": [
                 "select",
                 "    Id,",
-                "    Username,",
+                "    UserName,",
                 "    KeycloakGuid as [Guid],",
                 "    Email,",
                 "    IsEmailVerified,",
