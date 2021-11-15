@@ -25,7 +25,7 @@ namespace Holism.Accounts.Models
 
         public string DisplayName { get; set; }
 
-        public DateTime? LastSyncDate { get; set; }
+        public DateTime? LastSyncUtcDate { get; set; }
 
         public dynamic RelatedItems { get; set; }
     }
