@@ -24,7 +24,6 @@ namespace Holism.Accounts.Business
 
         private static string GetKeycloakToken()
         {
-
             var parameters = new Dictionary<string, string>();
             parameters.Add("client_id", "admin-cli");
             parameters.Add("username", Config.GetSetting("KeycloakAdminUser"));
