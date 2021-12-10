@@ -1,32 +1,29 @@
-using System;
+namespace Holism.Accounts.Models;
 
-namespace Holism.Accounts.Models
+public class User : IEntity
 {
-    public class User : Holism.Models.IEntity
+    public User()
     {
-        public User()
-        {
-            RelatedItems = new System.Dynamic.ExpandoObject();
-        }
-
-        public long Id { get; set; }
-
-        public Guid KeycloakGuid { get; set; }
-
-        public string UserName { get; set; }
-
-        public string Email { get; set; }
-
-        public bool? IsEmailVerified { get; set; }
-
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public Guid? ProfilePictureGuid { get; set; }
-
-        public DateTime? LastSyncUtcDate { get; set; }
-
-        public dynamic RelatedItems { get; set; }
+        RelatedItems = new ExpandoObject();
     }
+
+    public long Id { get; set; }
+
+    public Guid KeycloakGuid { get; set; }
+
+    public string UserName { get; set; }
+
+    public string Email { get; set; }
+
+    public bool? IsEmailVerified { get; set; }
+
+    public string FirstName { get; set; }
+
+    public string LastName { get; set; }
+
+    public Guid? ProfilePictureGuid { get; set; }
+
+    public DateTime? LastSyncUtcDate { get; set; }
+
+    public dynamic RelatedItems { get; set; }
 }

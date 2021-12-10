@@ -1,26 +1,20 @@
-using Holism.Accounts.Models;
-using Holism.DataAccess;
+namespace Holism.Accounts.DataAccess;
 
-namespace Holism.Accounts.DataAccess
+public class Repository
 {
-    public class Repository
+    public static Repository<User> User
     {
-        public static Repository<User> User
+        get
         {
-            get
-            {
-                return new Holism.DataAccess.Repository<User
-                >(new AccountsContext());
-            }
+            return new Repository<User>(new AccountsContext());
         }
+    }
 
-        public static Repository<UserView> UserView
+    public static Repository<UserView> UserView
+    {
+        get
         {
-            get
-            {
-                return new Holism.DataAccess.Repository<UserView
-                >(new AccountsContext());
-            }
+            return new Repository<UserView>(new AccountsContext());
         }
     }
 }
