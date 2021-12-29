@@ -47,7 +47,7 @@
                 "select",
                 "    Id,",
                 "    UserName,",
-                "    KeycloakGuid as [Guid],",
+                "    KeycloakGuid as Guid,",
                 "    Email,",
                 "    IsEmailVerified,",
                 "    FirstName,",
