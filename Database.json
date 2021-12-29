@@ -57,14 +57,14 @@
                 "        when FirstName is not null",
                 "        or LastName is not null",
                 "        then",
-                "            isnull(FirstName, '') + ' ' + isnull(LastName, '')",
+                "            ifnull(FirstName, '') + ' ' + ifnull(LastName, '')",
                 "        when Email is not null",
                 "        then Email",
                 "        else",
                 "            'N/A'",
                 "        end",
                 "    ) as DisplayName,",
-                "    LastSyncDate",
+                "    LastSyncUtcDate",
                 "from Users"
             ]
         }
