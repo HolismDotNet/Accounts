@@ -77,13 +77,13 @@ namespace Holism.Accounts.Business
         {
             lock (lockToken)
             {
-                if (syncs.ContainsKey(keycloakGuid) && DateTime.Now.Subtract(syncs[keycloakGuid]).TotalHours < 12)
+                if (syncs.ContainsKey(keycloakGuid) && UniversalDateTime.Now.Subtract(syncs[keycloakGuid]).TotalHours < 12)
                 {
                     return;
                 }
             }
             var user = new UserBusiness().GetUserByKeycloakGuid(keycloakGuid);
-            if (user.LastSyncUtcDate != null && DateTime.Now.ToUniversalTime().Subtract(user.LastSyncUtcDate.Value).TotalHours < 12)
+            if (user.LastSyncUtcDate != null && UniversalDateTime.Now.Subtract(user.LastSyncUtcDate.Value).TotalHours < 12)
             {
                 lock (lockToken)
                 {
@@ -124,17 +124,17 @@ namespace Holism.Accounts.Business
             {
                 user.IsEmailVerified = emailVerified.GetBoolean();
             }
-            user.LastSyncUtcDate = DateTime.Now.ToUniversalTime();
+            user.LastSyncUtcDate = UniversalDateTime.Now;
             new UserBusiness().Update(user);
             lock (lockToken)
             {
                 if (syncs.ContainsKey(user.KeycloakGuid))
                 {
-                    syncs[user.KeycloakGuid] = DateTime.Now;
+                    syncs[user.KeycloakGuid] = UniversalDateTime.Now;
                 }
                 else
                 {
-                    syncs.Add(user.KeycloakGuid, DateTime.Now);
+                    syncs.Add(user.KeycloakGuid, UniversalDateTime.Now);
                 }
             }
         }
@@ -176,7 +176,7 @@ namespace Holism.Accounts.Business
                 {
                     user.IsEmailVerified = emailVerified.GetBoolean();
                 }
-                user.LastSyncUtcDate = DateTime.Now.ToUniversalTime();
+                user.LastSyncUtcDate = UniversalDateTime.Now;
 
                 new UserBusiness().Update(user);
             }
