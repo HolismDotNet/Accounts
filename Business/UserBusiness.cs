@@ -75,6 +75,10 @@ public class UserBusiness : Business<User, User>
 
     public static void SyncUser(Guid keycloakGuid)
     {
+        if (InfraConfig.IsDeveloping)
+        {
+            return;
+        }
         lock (lockToken)
         {
             if (syncs.ContainsKey(keycloakGuid) && UniversalDateTime.Now.Subtract(syncs[keycloakGuid]).TotalHours < 12)
