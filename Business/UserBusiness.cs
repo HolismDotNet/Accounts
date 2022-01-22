@@ -1,11 +1,10 @@
-namespace Holism.Accounts.Business;
+namespace Accounts;
 
 public class UserBusiness : Business<User, User>
 {
     protected override Repository<User> WriteRepository => Repository.User;
-    protected override ReadRepository<User> ReadRepository =>
-
-        Repository.User;
+    
+    protected override ReadRepository<User> ReadRepository => Repository.User;
 
     private static Dictionary<Guid, DateTime> syncs = new Dictionary<Guid, DateTime>();
 
@@ -172,5 +171,4 @@ public class UserBusiness : Business<User, User>
             new UserBusiness().Update(user);
         }
     }
-
 }

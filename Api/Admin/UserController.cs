@@ -1,4 +1,4 @@
-namespace Holism.Accounts.AdminApi;
+namespace Accounts;
 
 public class UserController : ReadController<UserView>
 {
@@ -10,5 +10,4 @@ public class UserController : ReadController<UserView>
         UserBusiness.SyncUsers();
         return OkJson();
     }
-
 }
