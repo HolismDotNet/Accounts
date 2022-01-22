@@ -1,20 +1,20 @@
-namespace Holism.Accounts.DataAccess;
+namespace Accounts;
 
 public class Repository
 {
-    public static Repository<User> User
+    public static Repository<Accounts.User> User
     {
         get
         {
-            return new Repository<User>(new AccountsContext());
+            return new Repository<Accounts.User>(new AccountsContext());
         }
     }
 
-    public static Repository<UserView> UserView
+    public static Repository<Accounts.UserView> UserView
     {
         get
         {
-            return new Repository<UserView>(new AccountsContext());
+            return new Repository<Accounts.UserView>(new AccountsContext());
         }
     }
 }

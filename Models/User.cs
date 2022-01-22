@@ -1,4 +1,4 @@
-namespace Holism.Accounts.Models;
+namespace Accounts;
 
 public class User : IEntity
 {

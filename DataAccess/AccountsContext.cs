@@ -1,4 +1,4 @@
-namespace Holism.Accounts.DataAccess;
+namespace Accounts;
 
 public class AccountsContext : DatabaseContext
 {
