@@ -4,9 +4,9 @@ public class AccountsContext : DatabaseContext
 {
     public override string ConnectionStringName => "Accounts";
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<Accounts.User> Users { get; set; }
 
-    public DbSet<UserView> UserViews { get; set; }
+    public DbSet<Accounts.UserView> UserViews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
