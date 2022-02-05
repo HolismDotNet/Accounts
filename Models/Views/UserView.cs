@@ -1,6 +1,6 @@
 namespace Accounts;
 
-public class UserView : IGuidEntity
+public class UserView : IEntity, IGuid
 {
     public UserView()
     {
