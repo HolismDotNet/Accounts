@@ -2,19 +2,19 @@ namespace Accounts;
 
 public class Repository
 {
-    public static Repository<Accounts.User> User
+    public static Write<Accounts.User> User
     {
         get
         {
-            return new Repository<Accounts.User>(new AccountsContext());
+            return new Write<Accounts.User>(new AccountsContext());
         }
     }
 
-    public static Repository<Accounts.UserView> UserView
+    public static Write<Accounts.UserView> UserView
     {
         get
         {
-            return new Repository<Accounts.UserView>(new AccountsContext());
+            return new Write<Accounts.UserView>(new AccountsContext());
         }
     }
 }

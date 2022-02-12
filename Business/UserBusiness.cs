@@ -4,9 +4,9 @@ namespace Accounts;
 
 public class UserBusiness : Business<User, User>
 {
-    protected override Repository<User> WriteRepository => Repository.User;
+    protected override Write<User> Write => Repository.User;
     
-    protected override ReadRepository<User> ReadRepository => Repository.User;
+    protected override Read<User> Read => Repository.User;
 
     private static Dictionary<Guid, DateTime> syncs = new Dictionary<Guid, DateTime>();
 
@@ -48,7 +48,7 @@ public class UserBusiness : Business<User, User>
 
     private User GetUserByKeycloakGuid(Guid keycloakGuid)
     {
-        var user = ReadRepository.Get(i => i.KeycloakGuid == keycloakGuid);
+        var user = Read.Get(i => i.KeycloakGuid == keycloakGuid);
         if (user == null)
         {
             user =
