@@ -6,7 +6,7 @@
             "columns": [
                 {
                     "name": "KeycloakGuid",
-                    "isUnique": true
+                    "unique": true
                 },
                 {
                     "name": "UserName",
