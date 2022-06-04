@@ -10,32 +10,32 @@
                 },
                 {
                     "name": "UserName",
-                    "isNullable": true
+                    "nullable": true
                 },
                 {
                     "name": "Email",
-                    "isNullable": true
+                    "nullable": true
                 },
                 {
                     "name": "IsEmailVerified",
                     "type": "boolean",
-                    "isNullable": true
+                    "nullable": true
                 },
                 {
                     "name": "FirstName",
-                    "isNullable": true
+                    "nullable": true
                 },
                 {
                     "name": "LastName",
-                    "isNullable": true
+                    "nullable": true
                 },
                 {
                     "name": "ProfilePictureGuid",
-                    "isNullable": true
+                    "nullable": true
                 },
                 {
                     "name": "LastSyncDate",
-                    "isNullable": true
+                    "nullable": true
                 }
             ]
         }
